@@ -1,0 +1,2 @@
+# ERC_20 FUNGIABLE TOKEN
+ This is complete ERC_20 Fungiable token.In the frontend, i used Reactjs and web3.Smart contract is written in solidity language deployed by truffle framework.Smart contract is deployed on Ropsten testnet. 
