@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import './App.css';
 import getWeb3 from './getWeb3';
 import Token from './artifacts/Token.json';
@@ -23,8 +23,8 @@ const App = () => {
       const accounts = await Web3.eth.getAccounts();
       setaccount(accounts[0]);
       const balance = await Web3.eth.getBalance(accounts[0]);
-      // console.log(balance);
-      setBalance(balance);
+      var balance2=Web3.utils.fromWei(balance,'ether');
+      setBalance(balance2);
        const networkId = await Web3.eth.net.getId();
        if(networkId===1){
         setnetworkName("Mainnet")
@@ -53,11 +53,9 @@ const App = () => {
          deployedNetwork && deployedNetwork.address);
          setcontract(instance);
  }
-connect();
-
 const name=async()=>{
   if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else{
     
     await contract.methods.name().call((err,result)=>{setScreen(result)});
@@ -66,28 +64,28 @@ const name=async()=>{
 }
 const symbol=async ()=>{
   if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else{
     await contract.methods.symbol().call((err,result)=>{setScreen(result)});
   }
 }
 const owner=async ()=>{
   if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else{
     await contract.methods.owner().call((err,result)=>{setScreen(result)});
   }
 }
 const Decimals=async ()=>{
   if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else{
     await contract.methods.decimals().call((err,result)=>{setScreen(result)});
   }
 }
 const price=async()=>{
   if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else{
     await contract.methods.wei_equals().call((err,result)=>{setScreen(`1 Ether = ${result} Tokens`);setwei_equals(result)});
   }
@@ -95,7 +93,7 @@ const price=async()=>{
 
 const totalSupply=async ()=>{
   if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else{
     await contract.methods.totalSupply().call((err,result)=>{
       // alert(web3.utils.fromWei(result,'ether'))
@@ -108,7 +106,7 @@ const owneraddress=(event)=>{
 }
 const balance=async ()=>{
   if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else if(OwnerAddress.length!==42){
     alert("Enter the correct ropsten account address to see the balance.copy the address from your wallet")
   }else{
@@ -122,7 +120,7 @@ const spenderaddress=(event)=>{
 }
 const allowance= async()=>{
   if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else if(OwnerAddress.length!==42){
     alert("Enter the correct ropsten account address to see the allowance.copy the address from your wallet")
   }else if(Spenderaddress.length!==42){
@@ -139,7 +137,7 @@ const approve= async()=>{
   if(Amount<1){
     alert(`${Amount} Negative amount can't be approve`)
   }else if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else{
     const Unit=web3.utils.toWei(Amount,'ether');
     await contract.methods.approve(Spenderaddress,Unit).send({from:account});
@@ -153,7 +151,7 @@ const buyToken= async()=>{
   if(Amount2<1){
     alert(`${Amount2} Negative amount can't be approve`)
   }else if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else if(wei_equals===0){
     await contract.methods.wei_equals().call((err,result)=>{setwei_equals(result)});
     buyToken();
@@ -170,7 +168,7 @@ const setPrice= async()=>{
   if(wei_equals2<1){
     alert(`${wei_equals2} Negative amount can't be approve`)
   }else if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else if(account!=="0x39602393131d0732C6ABF4dcd90390dE0DCe3c03"){
     alert("Only the smart contract owner can change the price")
   }else{
@@ -187,7 +185,7 @@ const transfer= async()=>{
   if(Amount<1){
     alert(`${Numberoftoken} Negative amount can't be approve`)
   }else if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else if(Recipientaddress.length!==42){
     alert("Enter the correct account address otherwise it won't work")
   }else{
@@ -199,7 +197,7 @@ const transferfrom= async()=>{
   if(Amount<1){
     alert(`${Numberoftoken} Negative amount can't be approve`)
   }else if(networkName!=="Ropsten"){
-    alert("Connect to Ropsten network otherwise it won't work")
+    alert("Connect to wallet and then Connect to Ropsten network otherwise it won't work")
   }else if(Recipientaddress.length!==42){
     alert("Enter the correct account address otherwise it won't work")
   }else if(OwnerAddress.length!==42){
@@ -218,8 +216,8 @@ const restart=()=>{
   <nav className="navbar">
   <div className="upper">
       <h4>{networkName} Connected</h4>
-      <h4>Balance: {Balance} wei</h4>
-      <button className="btn" onClick={restart}><h4>Connect to Wallet</h4></button></div>
+      <h4>Balance: {Balance}</h4>
+      <button className="btn" onClick={restart}><h4>Connect Wallet</h4></button></div>
   <div className="lower">Account:{account}</div>
   </nav>
   <div className="Main">
@@ -239,19 +237,18 @@ const restart=()=>{
   <input className="input" placeholder="amount" type="number" onChange={amount}></input>
       <button className="btn2" onClick={()=>approve()}>Approve Token</button>
   <input className="input" placeholder="amount" type="number" onChange={amount2}></input>
-      <button className="btn2" onClick={()=>buyToken()}>Buy tokens</button>
+      <button className="btn4" onClick={()=>buyToken()}>Buy tokens</button>
       <button className="btn2" onClick={()=>price()}>Token price </button>
   <input className="input" placeholder="1 Ether equals" type="number" onChange={price2}></input>
-      <button className="btn2" onClick={()=>setPrice()}>Set Token price</button>
+      <button className="btn3" onClick={()=>setPrice()}>Set Token price</button>
   <input className="input" placeholder="Recipient address" type="string" onChange={recipientaddress}></input>
   <input className="input" placeholder="Number of tokens" type="number" onChange={numberoftoken}></input>
-      <button className="btn2" onClick={()=>transfer()}>Transfer Token</button>
+      <button className="btn3" onClick={()=>transfer()}>Transfer Token</button>
   <input className="input" placeholder="From address" type="string" onChange={owneraddress}></input>
   <input className="input" placeholder="To address" type="string" onChange={recipientaddress}></input>
   <input className="input" placeholder="Number of tokens" type="number" onChange={numberoftoken}></input>
-      <button className="btn2" onClick={()=>transferfrom()}>Transfer token from</button>
+      <button className="btn3" onClick={()=>transferfrom()}>Transfer token from</button>
   </div>
-      
   </div>
   </div>
     </>
